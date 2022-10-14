@@ -1,4 +1,6 @@
+import javax.swing.*;
 import java.sql.SQLSyntaxErrorException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
@@ -48,10 +50,19 @@ public class OpenCallengeUserInput {
         int question;
         Vector<String> answer = new Vector<String>();
 
+        System.out.println("**** 영어 단어 테스트 프로그램 \"명품영어\"입니다. ****");
         int order=0;
         while(order != 3){
             System.out.print("단어 테스트 :1, 단어 삽입:2, 종료:3 >>");
-            order = scanner.nextInt();
+
+            try{
+                order = scanner.nextInt();
+            }catch (InputMismatchException e){
+                System.out.println("숫자를 입력하세요!!");
+                scanner = new Scanner(System.in);
+                order = 0;
+            }
+
             switch (order){
                 case 1:
                     System.out.println("\"명품영어\"의 단어테스트를 시작합니다. -1을 입력하면 종료합니다.");
@@ -76,18 +87,23 @@ public class OpenCallengeUserInput {
                             System.out.print("("+(i+1)+")"+answer.get(i)+" ");
                         }
                         System.out.print(" :> ");
-                        num = scanner.nextInt();
 
-                        if(num== -1){
-                            System.out.println();
-                            break;
+                        try{
+                            num = scanner.nextInt();
+                            if(num== -1){
+                                System.out.println();
+                                answer.clear();
+                                break;
+                            }
+
+                            if(v.get(question).getKor().equals(answer.get(num-1)))
+                                System.out.println("Excellent !!");
+                            else
+                                System.out.println("No. !!");
+                        }catch (InputMismatchException e){
+                            System.out.println("숫자를 입력하세요!!");
+                            scanner = new Scanner(System.in);
                         }
-
-                        if(v.get(question).getKor().equals(answer.get(num-1)))
-                            System.out.println("Excellent !!");
-                        else
-                            System.out.println("No. !!");
-
                         answer.clear();
                     }
                     break;
@@ -110,7 +126,6 @@ public class OpenCallengeUserInput {
                         }
                         if(key){
                             v.add(new Dic(english, korean));
-                            System.out.println("1");
                         }
 
                     }
